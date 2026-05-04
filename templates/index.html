@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Summarizer API - Documentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            font-size: 3em;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-right: 10px;
+        }
+
+        .badge-success {
+            background: #10b981;
+            color: white;
+        }
+
+        .badge-info {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .badge-warning {
+            background: #f59e0b;
+            color: white;
+        }
+
+        /* Grid Layout */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            border-left: 4px solid #667eea;
+            padding-left: 15px;
+        }
+
+        .card h3 {
+            color: #555;
+            margin: 20px 0 10px 0;
+            font-size: 1.1em;
+        }
+
+        /* API Endpoint */
+        .endpoint {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-left: 4px solid #10b981;
+        }
+
+        .method {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.8em;
+            margin-right: 10px;
+        }
+
+        .method-post {
+            background: #10b981;
+            color: white;
+        }
+
+        .method-get {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .url {
+            font-family: 'Courier New', monospace;
+            font-size: 1em;
+            color: #333;
+        }
+
+        /* Code Blocks */
+        pre {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 10px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+            margin: 15px 0;
+        }
+
+        code {
+            font-family: 'Courier New', monospace;
+        }
+
+        /* Interactive Tester */
+        .tester {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+            font-family: monospace;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .response {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #10b981;
+        }
+
+        .response h3 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .response pre {
+            background: white;
+            margin-top: 10px;
+        }
+
+        /* Status Indicators */
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+
+        .status-healthy {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-unhealthy {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .provider-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .provider-tag {
+            background: #e5e7eb;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .provider-tag.active {
+            background: #10b981;
+            color: white;
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            color: white;
+            margin-top: 40px;
+            padding: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            .header {
+                padding: 20px;
+            }
+            h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🤖 AI Page Summarizer API</h1>
+            <p class="subtitle">Production-ready Django backend with multi-provider AI summarization</p>
+            <div>
+                <span class="badge badge-success">✓ Production Ready</span>
+                <span class="badge badge-info">🔄 Multi-Provider Fallback</span>
+                <span class="badge badge-warning">⚡ Free Tier Support</span>
+            </div>
+        </div>
+
+        <!-- Health Status -->
+        <div class="card" id="health-card">
+            <h2>📊 System Health</h2>
+            <div id="health-status">Checking health status...</div>
+        </div>
+
+        <!-- Grid for Documentation -->
+        <div class="grid">
+            <!-- API Endpoints -->
+            <div class="card">
+                <h2>📡 API Endpoints</h2>
+                
+                <div class="endpoint">
+                    <span class="method method-post">POST</span>
+                    <span class="url">/api/summarize/</span>
+                    <p style="margin-top: 10px; color: #666;">Summarize webpage content using AI</p>
+                </div>
+
+                <div class="endpoint">
+                    <span class="method method-get">GET</span>
+                    <span class="url">/api/health/</span>
+                    <p style="margin-top: 10px; color: #666;">Check API health and provider availability</p>
+                </div>
+
+                <h3>📤 Request Format (Summarize)</h3>
+                <pre>{
+  "title": "Page Title",
+  "content": "Extracted page content (max 8000 chars)",
+  "url": "https://example.com/page"  // optional
+}</pre>
+
+                <h3>📥 Response Format</h3>
+                <pre>{
+  "success": true,
+  "summary": {
+    "summary": ["bullet 1", "bullet 2", ...],
+    "keyInsights": ["insight 1", "insight 2", ...],
+    "readingTime": "X min read"
+  },
+  "provider": "groq",
+  "fromCache": false
+}</pre>
+            </div>
+
+            <!-- Provider Information -->
+            <div class="card">
+                <h2>🔄 AI Providers (Fallback Chain)</h2>
+                <div class="provider-list" id="provider-list">
+                    <span class="provider-tag">Groq (Free)</span>
+                    <span class="provider-tag">Gemini (Free)</span>
+                    <span class="provider-tag">OpenAI (Paid)</span>
+                    <span class="provider-tag">Claude (Paid)</span>
+                    <span class="provider-tag">Mock (Testing)</span>
+                </div>
+                
+                <h3>⚙️ Features</h3>
+                <ul style="margin-left: 20px; color: #666; line-height: 1.8;">
+                    <li>✅ Automatic provider fallback</li>
+                    <li>✅ Response caching</li>
+                    <li>✅ Rate limiting (30 req/min)</li>
+                    <li>✅ Content truncation (8000 chars)</li>
+                    <li>✅ CORS enabled for Chrome extension</li>
+                    <li>✅ Production ready for Vercel</li>
+                </ul>
+
+                <h3>🔧 Environment Variables</h3>
+                <pre># Required
+SECRET_KEY=your-secret-key
+
+# Optional (add at least one)
+GROQ_API_KEY=your-groq-key
+GEMINI_API_KEY=your-gemini-key
+OPENAI_API_KEY=your-openai-key
+CLAUDE_API_KEY=your-claude-key</pre>
+            </div>
+        </div>
+
+        <!-- Interactive API Tester -->
+        <div class="tester">
+            <h2>🧪 Interactive API Tester</h2>
+            <p style="color: #666; margin-bottom: 20px;">Test the summarization API directly from your browser</p>
+            
+            <form id="test-form">
+                <div class="form-group">
+                    <label for="title">📄 Page Title</label>
+                    <input type="text" id="title" placeholder="e.g., The Future of Artificial Intelligence" value="Understanding Machine Learning">
+                </div>
+                
+                <div class="form-group">
+                    <label for="content">📝 Page Content</label>
+                    <textarea id="content" placeholder="Paste or type the article content here...">Machine learning is a subset of artificial intelligence that enables systems to learn and improve from experience without being explicitly programmed. It focuses on developing algorithms that can access data and use it to learn for themselves. The process of machine learning involves training a model on a dataset, allowing it to make predictions or decisions based on that data. Common applications include image recognition, natural language processing, and recommendation systems. Deep learning, a subset of machine learning, uses neural networks with many layers to analyze various factors of data. This technology has revolutionized fields like computer vision and speech recognition, enabling breakthroughs in autonomous vehicles, medical diagnosis, and personalized recommendations.</textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="url">🔗 URL (optional)</label>
+                    <input type="text" id="url" placeholder="https://example.com/article" value="https://example.com/ml-article">
+                </div>
+                
+                <button type="submit" id="test-btn">🚀 Test Summarization</button>
+            </form>
+            
+            <div id="response" class="response" style="display: none;">
+                <h3>📊 Response</h3>
+                <div id="response-meta"></div>
+                <pre id="response-json"></pre>
+            </div>
+        </div>
+
+        <!-- Code Examples -->
+        <div class="grid">
+            <div class="card">
+                <h2>🐍 Python Example</h2>
+                <pre>import requests
+
+url = "http://127.0.0.1:8000/api/summarize/"
+data = {
+    "title": "Article Title",
+    "content": "Your article content here..."
+}
+
+response = requests.post(url, json=data)
+print(response.json())</pre>
+            </div>
+
+            <div class="card">
+                <h2>🌐 cURL Example</h2>
+                <pre>curl -X POST http://127.0.0.1:8000/api/summarize/ \
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "Article Title",
+    "content": "Your article content here..."
+  }'</pre>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>🚀 Built with Django | 🔄 Multi-Provider AI | ☁️ Ready for Vercel Deployment</p>
+            <p style="margin-top: 10px; font-size: 0.9em;">© 2026 ZenAI Page Summarizer - Open Source MIT License</p>
+        </div>
+    </div>
+
+    <script>
+        // Health check on load
+        async function checkHealth() {
+            try {
+                const response = await fetch('/api/health/');
+                const data = await response.json();
+                
+                const healthDiv = document.getElementById('health-status');
+                if (data.status === 'healthy') {
+                    healthDiv.innerHTML = `
+                        <div class="status status-healthy">
+                            <span>✅ System Healthy</span>
+                        </div>
+                        <div style="margin-top: 15px;">
+                            <strong>Available Providers:</strong>
+                            <div class="provider-list" style="margin-top: 10px;">
+                                ${data.groq_available ? '<span class="provider-tag active">✓ Groq</span>' : '<span class="provider-tag">✗ Groq</span>'}
+                                ${data.gemini_available ? '<span class="provider-tag active">✓ Gemini</span>' : '<span class="provider-tag">✗ Gemini</span>'}
+                                <span class="provider-tag active">✓ Mock</span>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    healthDiv.innerHTML = '<div class="status status-unhealthy">⚠️ System Unhealthy</div>';
+                }
+            } catch (error) {
+                document.getElementById('health-status').innerHTML = `
+                    <div class="status status-unhealthy">
+                        ⚠️ Cannot connect to API - Make sure Django server is running
+                    </div>
+                `;
+            }
+        }
+
+        // Test summarization
+        document.getElementById('test-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const btn = document.getElementById('test-btn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<div class="spinner"></div> Processing...';
+            btn.disabled = true;
+            
+            const title = document.getElementById('title').value;
+            const content = document.getElementById('content').value;
+            const url = document.getElementById('url').value;
+            
+            try {
+                const response = await fetch('/api/summarize/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ title, content, url })
+                });
+                
+                const data = await response.json();
+                
+                const responseDiv = document.getElementById('response');
+                const responseMeta = document.getElementById('response-meta');
+                const responseJson = document.getElementById('response-json');
+                
+                if (data.success) {
+                    responseMeta.innerHTML = `
+                        <div style="margin-bottom: 10px;">
+                            <span class="badge badge-success">✓ Success</span>
+                            <span class="badge badge-info">Provider: ${data.provider}</span>
+                            ${data.fromCache ? '<span class="badge badge-warning">Cached</span>' : ''}
+                        </div>
+                    `;
+                    responseJson.textContent = JSON.stringify(data.summary, null, 2);
+                } else {
+                    responseMeta.innerHTML = `
+                        <div style="margin-bottom: 10px;">
+                            <span class="badge" style="background: #ef4444; color: white;">✗ Failed</span>
+                        </div>
+                    `;
+                    responseJson.textContent = JSON.stringify(data, null, 2);
+                }
+                
+                responseDiv.style.display = 'block';
+                
+            } catch (error) {
+                const responseDiv = document.getElementById('response');
+                const responseMeta = document.getElementById('response-meta');
+                const responseJson = document.getElementById('response-json');
+                
+                responseMeta.innerHTML = '<span class="badge" style="background: #ef4444; color: white;">✗ Error</span>';
+                responseJson.textContent = `Error: ${error.message}\n\nMake sure the Django server is running on port 8000`;
+                responseDiv.style.display = 'block';
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        });
+        
+        // Load health status
+        checkHealth();
+        
+        // Auto-refresh health every 30 seconds
+        setInterval(checkHealth, 30000);
+    </script>
+</body>
+</html>
