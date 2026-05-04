@@ -13,8 +13,8 @@ Production-ready Django backend that acts as a secure proxy for multiple AI prov
 
 1. **Clone the repository**
 ```bash
-git clone <your-repo-url>
-cd django-ai-summarizer
+git clone [GITHUB REPO](https://github.com/FavieCodes/ai-summarizer-backend.git)
+cd ai-summarizer-backend
 ```
 2. **Create and activate virtual environment**
 
