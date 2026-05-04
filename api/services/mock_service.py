@@ -6,15 +6,12 @@ def call_mock(title, content):
     Mock service that always works - perfect for testing and fallback
     This doesn't require any API keys and always returns a valid summary
     """
-    # Extract some keywords from content for realistic mock
     words = content.split()[:30]
     topic = "this topic" if len(words) < 5 else " ".join(words[:5])
     
-    # Generate realistic reading time
+   
     word_count = len(content.split())
-    reading_time = max(1, word_count // 200)  # 200 words per minute
-    
-    # Create a list of topic tags based on content
+    reading_time = max(1, word_count // 200)  
     content_lower = content.lower()
     tags = []
     if 'ai' in content_lower or 'artificial' in content_lower:
@@ -27,7 +24,7 @@ def call_mock(title, content):
         tags.append("Web Technology")
     if not tags:
         tags = ["Information", "Article Summary", "Key Points"]
-    tags = tags[:3]  # Max 3 tags
+    tags = tags[:3]  
     
     return {
         "summary": [

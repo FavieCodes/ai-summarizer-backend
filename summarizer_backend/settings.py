@@ -171,7 +171,7 @@ REST_FRAMEWORK = {
 CORS_ALLOWED_ORIGINS = [
     "chrome-extension://*",
 ]
-CORS_ALLOW_ALL_ORIGINS = True  # For development, restrict in production
+CORS_ALLOW_ALL_ORIGINS = True  
 
 # Security settings for production
 if not DEBUG:

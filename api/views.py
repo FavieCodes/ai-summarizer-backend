@@ -115,13 +115,11 @@ def health_check(request):
         
         # Test each provider synchronously with timeout
         with ThreadPoolExecutor(max_workers=4) as executor:
-            # Submit all tests
             groq_future = executor.submit(test_groq_connection, groq_service.api_key)
             gemini_future = executor.submit(test_gemini_connection, gemini_service.api_key)
             openai_future = executor.submit(test_openai_connection, openai_service.api_key)
             claude_future = executor.submit(test_claude_connection, claude_service.api_key)
             
-            # Get results with timeout
             try:
                 groq_available = groq_future.result(timeout=10)
             except FuturesTimeoutError:
@@ -174,8 +172,8 @@ def health_check(request):
             'message': 'Always available for testing'
         }
         
-        # Cache for 60 seconds
-        cache.set(cache_key, providers_status, 60)
+
+        cache.set(cache_key, providers_status, 120)
     
     # Calculate overall status
     any_available = any(p['available'] for p in providers_status.values())
@@ -220,7 +218,7 @@ def summarize_page(request):
         content = data.get('content', '')
         url = data.get('url', '')
         
-        # Log request (without sensitive data)
+        # Log request
         logger.info(f"Summarize request - Title: {title[:50]}, Content length: {len(content)}, URL: {url[:50]}")
         
         if not content:
